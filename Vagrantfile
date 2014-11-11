@@ -19,12 +19,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :chef_solo do |chef|
 	chef.add_recipe "apt"
         chef.add_recipe "nodejs"
-	chef_add_recipe "ruby_build"
-        chef_add_recipe "rbenv::user"
-        chef_add_recipe "rbenv::vagrant"
-        chef_add_recipe "vim"
-        chef_add_recipe "mysql:server"
-        chef_add_recipe "mysql:client"
+	chef.add_recipe "ruby_build"
+        chef.add_recipe "rbenv::user"
+        chef.add_recipe "rbenv::vagrant"
+        chef.add_recipe "vim"
+        chef.add_recipe "mysql:server"
+        chef.add_recipe "mysql:client"
 
         chef.json = {
 	  rbenv: {
@@ -38,7 +38,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	  mysql: { server_root_password: 'P@SSWORD1'}
 	}
         end
-  end
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
   # config.vm.box_url = "http://domain.com/path/to/above.box"
