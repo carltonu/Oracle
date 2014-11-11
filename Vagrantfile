@@ -10,21 +10,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "centos"
+  config.vm.box = "centos6.4"
   
-  config.vm.box_url = "https://s3.amazonaws.com/itmat-public/centos-6.3-chef-10.14.2.box"
+  #config.vm.box_url = "https://s3.amazonaws.com/itmat-public/centos-6.3-chef-10.14.2.box"
   
+  config.vm.box_url = "http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20131103.box"
   # Telling Vagrant to install Ruby
 
   config.vm.provision :chef_solo do |chef|
+        chef.cookbooks_path = ["cookbooks"]
 	chef.add_recipe "apt"
-        chef.add_recipe "nodejs"
 	chef.add_recipe "ruby_build"
-        chef.add_recipe "rbenv::user"
-        chef.add_recipe "rbenv::vagrant"
         chef.add_recipe "vim"
-        chef.add_recipe "mysql:server"
-        chef.add_recipe "mysql:client"
+        chef.add_recipe "mysql::server"
+        chef.add_recipe "mysql::client"
 
         chef.json = {
 	  rbenv: {
@@ -49,7 +48,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :forwarded_port, guest:3000, host: 3000
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
