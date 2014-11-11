@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+#^syntax detection
+
+site 'http://community.opscode.com/api/v1'
+
+cookbook 'build-essential'
+cookbook 'runit'
+cookbook 'ruby_build'
+cookbook 'apt'
+cookbook 'rbenv', :git => 'github.com/fnichol/chef-rbenv'
+cookbook 'mysql'

@@ -16,11 +16,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   # Telling Vagrant to install Ruby
 
-  config.vm.customize ["modifyvm", :id, "--memory", 4096]
-  config.vm.provision :shell, :path => "install-rvm.sh", :args => "stable"
-  config.vm.provision :shell, :path => "install-ruby.sh", :args => "1.9.3"
-  config.vm.provision :shell, :path => "install-ruby.sh", :args => "2.0.0 rails haml"
+  config.vm.provision :chef_solo do |chef|
+	chef.add_recipe "apt"
+        chef.add_recipe "nodejs"
+	chef_add_recipe "ruby_build"
+        chef_add_recipe "rbenv::user"
+        chef_add_recipe "rbenv::vagrant"
+        chef_add_recipe "vim"
+        chef_add_recipe "mysql:server"
+        chef_add_recipe "mysql:client"
 
+        chef.json = {
+	  rbenv: {
+	    user_installs: [{
+	      user: 'vagrant',
+	      rubies: ["2.1.2"],
+	      global: "2.1.2",
+	      gems: {"2.1.2" => [{ name: "bundler" }]}
+	      }]
+	  },
+	  mysql: { server_root_password: 'P@SSWORD1'}
+	}
+        end
+  end
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
   # config.vm.box_url = "http://domain.com/path/to/above.box"
@@ -53,13 +71,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider :virtualbox do |vb|
-  #   # Don't boot with headless mode
-  #   vb.gui = true
-  #
-  #   # Use VBoxManage to customize the VM. For example to change memory:
-  #   vb.customize ["modifyvm", :id, "--memory", "1024"]
-  # end
+  config.vm.provider :virtualbox do |vb|
+  # Don't boot with headless mode
+  #  vb.gui = true
+  
+  # Use VBoxManage to customize the VM. For example to change memory:
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
+  end
   #
   # View the documentation for the provider you're using for more
   # information on available options.
